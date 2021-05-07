@@ -88,27 +88,34 @@
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
-<p>To add the workflow files to your repo, call:</p>
+<p>To add the workflow files to your R package repo, call:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">## Typical repos</span>
+<code class="sourceCode R"><span class="co">## Typical R package repos</span>
 <span class="co"># usethis::use_github_action_check_standard()</span>
 
-<span class="co"># This repo uses (and all future repos should use)</span>
+<span class="co"># This R package repo uses (and all future repos should use)</span>
 <span class="fu">usethis</span><span class="fu">::</span><span class="fu">use_github_action</span><span class="op">(</span><span class="st">"check-pak"</span><span class="op">)</span>
 <span class="fu">usethis</span><span class="fu">::</span><span class="fu">use_github_action</span><span class="op">(</span><span class="st">"pkgdown-pak"</span><span class="op">)</span></code></pre></div>
 <p>… then <code>git commit</code> and <code>git push</code> the changes in your local repo!</p>
 </div>
 </div>
-<div id="definitions" class="section level1">
+<div id="github-actions" class="section level1">
 <h1 class="hasAnchor">
-<a href="#definitions" class="anchor"></a>Definitions</h1>
-<ul>
-<li>GitHub Actions
+<a href="#github-actions" class="anchor"></a>GitHub Actions</h1>
 <ul>
 <li>GitHub’s answer to CI</li>
 <li><blockquote>
 <p>Automate, customize, and execute your software development workflows right in your repository with GitHub Actions. You can discover, create, and share actions to perform any job you’d like, including CI/CD, and combine actions in a completely customized workflow.</p>
 </blockquote></li>
+<li>
+<a href="https://github.com/actions/virtual-environments">Virtual environments</a>
+<ul>
+<li>Ubuntu 18, 20</li>
+<li>macOS 10.15, 11</li>
+<li>Windows Server 2016, 2019</li>
+</ul>
+</li>
+<li><a href="https://docs.github.com/en/actions/reference/usage-limits-billing-and-administration#usage-limits">Usage Limits</a></li>
 <li>Links:
 <ul>
 <li>Main: <a href="https://docs.github.com/en/actions" class="uri">https://docs.github.com/en/actions</a>
@@ -119,25 +126,9 @@
 </li>
 </ul>
 </li>
-<li>“I’d bet can do almost everything you can do in Jenkins, you can do in GitHub Actions” - Derrick
+<li>“I’d bet almost everything you can do in Jenkins, you can do in GitHub Actions” - Derrick
 <ul>
 <li>See <a href="https://github.com/r-lib/actions/blob/master/examples/docker.yaml">example of executing all steps within a Docker container</a>.</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<code>pak</code>
-<ul>
-<li>A <em>new</em> version <a href="https://github.com/r-lib/remotes">of <code>remotes</code></a>
-</li>
-<li><blockquote>
-<p>A fresh approach to package installation</p>
-</blockquote></li>
-<li>Website: <a href="https://pak.r-lib.org/" class="uri">https://pak.r-lib.org/</a>
-</li>
-<li>GitHub: <a href="https://github.com/r-lib/pak" class="uri">https://github.com/r-lib/pak</a>
-</li>
 </ul>
 </li>
 </ul>
@@ -146,16 +137,16 @@
 <h1 class="hasAnchor">
 <a href="#story" class="anchor"></a>Story</h1>
 <p>When submitting packages to CRAN, it helps to let them know where you’ve tested R packages and on which platforms. The more platforms and R versions that you can test your package on, the better!</p>
-<div id="history" class="section level4">
-<h4 class="hasAnchor">
-<a href="#history" class="anchor"></a>History</h4>
+<div id="history" class="section level3">
+<h3 class="hasAnchor">
+<a href="#history" class="anchor"></a>History</h3>
 <p>Before GitHub Actions, developers used <a href="https://travis-ci.com/github/rstudio">Travis-CI</a> (and some packages still do!). However, Travis was limited in that it could only test using a single type linux machine. You could test on multiple R versions.</p>
 <p>Given authors develop on a mac, this required package authors to <a href="https://github.com/r-hub/rhub">use <code>r-hub</code></a> (lead by Gabor) to test on different flavors of windows machines. This service was MUCH better the praying and hoping your code worked, but was still not very robust.</p>
 <p>R-hub may still be a good place to check if you have compiled <code>./src</code> code. However, this is a small number of R packages.</p>
 </div>
-<div id="need" class="section level4">
-<h4 class="hasAnchor">
-<a href="#need" class="anchor"></a>Need</h4>
+<div id="ci-need" class="section level3">
+<h3 class="hasAnchor">
+<a href="#ci-need" class="anchor"></a>CI Need</h3>
 <p>As RStudio has become more popular and usage demands are becoming more spread out, packages <a href="https://github.com/rstudio/plumber/blob/e846cb3edf980cfea3e37325c54d69c814db2194/.github/workflows/R-CMD-check.yaml#L23-L41">like <code>plumber</code></a> need to be sure they work on multiple operating systems and multiple versions of R.</p>
 <p>To feel comfortable submitting a heavily used R package, I like to test on using:</p>
 <ul>
@@ -182,9 +173,9 @@
 </blockquote>
 <p>These combinations create a large test matrix and is not fun to manually execute.</p>
 </div>
-<div id="solution" class="section level4">
-<h4 class="hasAnchor">
-<a href="#solution" class="anchor"></a>Solution</h4>
+<div id="ci-solution" class="section level3">
+<h3 class="hasAnchor">
+<a href="#ci-solution" class="anchor"></a>CI Solution</h3>
 <p>GitHub Actions (GHA) for R was initially explored by <a href="https://github.com/maxheld83">Max Held</a> during his summer internship at RStudio. Since then, GHA created a complete different interface and Max’s work was repurposed in <a href="https://github.com/r-lib/actions" class="uri">https://github.com/r-lib/actions</a> by Jim Hester.</p>
 <p>Using <code>r-lib/actions</code> allows package developers to use consistent routines, yet customize the CI execution.</p>
 <p>Two useful steps:</p>
@@ -198,24 +189,28 @@
 </ul>
 <p>This repo uses <code>pak</code> to <a href="https://github.com/schloerke/r-gha/blob/aad7c06173e7a7236a46fe1e15583ff5859d9138/.github/workflows/R-CMD-check.yaml#L69-L74">install system requirements</a> and <a href="https://github.com/schloerke/r-gha/blob/aad7c06173e7a7236a46fe1e15583ff5859d9138/.github/workflows/R-CMD-check.yaml#L76-L80">install all package dependencies</a>. To me, any general usage of <code>remotes</code> should be replaced with <code>pak</code>. It is better for many reasons. Two being:</p>
 <ul>
-<li>wholistic installation (consistency): It knows everything that is going to be installed before installing the first package.</li>
-<li>parallel installation (speed): If two packages are not dependent on each other, they may be install in parallel.</li>
-</ul>
-</div>
-<div id="environments" class="section level4">
-<h4 class="hasAnchor">
-<a href="#environments" class="anchor"></a>Environments</h4>
-<p><a href="https://github.com/actions/virtual-environments" class="uri">https://github.com/actions/virtual-environments</a></p>
+<li><p>wholistic installation (consistency): It knows everything that is going to be installed before installing the first package.</p></li>
+<li><p>parallel installation (speed): If two packages are not dependent on each other, they may be install in parallel.</p></li>
+<li>
+<p><code>pak</code></p>
 <ul>
-<li>Ubuntu 18, 20</li>
-<li>macOS 10.15, 11</li>
-<li>Windows Server 2016, 2019</li>
+<li>A <em>new</em> version <a href="https://github.com/r-lib/remotes">of <code>remotes</code></a>
+</li>
+<li><blockquote>
+<p>A fresh approach to package installation</p>
+</blockquote></li>
+<li>Website: <a href="https://pak.r-lib.org/" class="uri">https://pak.r-lib.org/</a>
+</li>
+<li>GitHub: <a href="https://github.com/r-lib/pak" class="uri">https://github.com/r-lib/pak</a>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
-<div id="real-life-example" class="section level1">
+<div id="real-life-usage" class="section level1">
 <h1 class="hasAnchor">
-<a href="#real-life-example" class="anchor"></a>Real Life Example</h1>
+<a href="#real-life-usage" class="anchor"></a>Real Life Usage</h1>
 <ul>
 <li>
 <code>r-lib/actions</code>
@@ -291,6 +286,36 @@
 <li><a href="https://github.com/rstudio/bslib/blob/ba6a80d14eb2bb04aea5977e27714740daa57965/.github/workflows/rituals.yaml#L86-L90">Build Readme.md</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li>
+<code>pak</code> R package
+<ul>
+<li>Repository Dispatch:
+<ul>
+<li>
+<a href="https://github.com/r-lib/pak/blob/master/.github/workflows/build.yaml"><code>build.yaml</code></a> has many “dispatch” commands to <code>pak-build</code> event.</li>
+<li>Executes <code>build-package.yaml</code> workflow via <a href="https://github.com/r-lib/pak/blob/1d10f80e17baf4fff5371d98e390269e36df7389/.github/workflows/build-package.yaml#L15-L16"><code>pak-build</code> event</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="https://github.com/rstudio/shinycoreci-apps/tree/master/.github/workflows"><code>shinycoreci-apps</code> repo</a>
+<ul>
+<li>
+<a href="https://github.com/rstudio/shinycoreci-apps/blob/master/.github/workflows/ci-runtests.yml">Shiny apps</a>
+<ul>
+<li>Long running GHA execution</li>
+<li>Executes on 4 R versions and 3 operating systems</li>
+<li>Checks 200+ Shiny applications</li>
+<li>Regular user recommendations</li>
+</ul>
+</li>
+<li><a href="https://github.com/rstudio/shinycoreci-apps/blob/master/.github/workflows/deploy.yml">Deploy to Connect &amp; shinyapps.io</a></li>
+<li><a href="https://github.com/rstudio/shinycoreci-apps/blob/master/.github/workflows/docker.yml">Deploy SSO &amp; SSP docker files for testing</a></li>
+<li><a href="https://github.com/rstudio/shinycoreci-apps/blob/master/.github/workflows/trim-old-branches.yml">Remove stale GitHub Branches in repo</a></li>
 </ul>
 </li>
 </ul>

@@ -6,9 +6,17 @@
 
 > This repo is not maintained after May 11, 2021 and may become out of date.
 
+
+## Demo
+
+* [Hello world](https://github.com/schloerke/r-gha/blob/main/.github/workflows/hello-world.yaml) - `echo 'hello world!'` 
+* [Code Linting hello world](https://github.com/schloerke/r-gha/blob/main/.github/workflows/hello-world-lintr.yaml) - Minimal steps to call `lintr::lint_package()`
+* [Bare bones - Check R package](https://github.com/schloerke/r-gha/blob/main/.github/workflows/hello-check.yaml) - Minimal steps to execute `R CMD check .`
+* [Regular - Check R package](https://github.com/schloerke/r-gha/blob/main/.github/workflows/check-pak.yaml) - Full R cmd check using `pak`.
+
 ## Usage
 
-Assuming you have an R package in your repo...
+To add the workflow files to your repo, call:
 
 ```r
 ## Typical repos
@@ -19,6 +27,8 @@ usethis::use_github_action("check-pak")
 usethis::use_github_action("pkgdown-pak")
 ```
 
+... then `git commit` and `git push` the changes in your local repo!
+
 # Definitions
 
 * GitHub Actions
@@ -28,14 +38,14 @@ usethis::use_github_action("pkgdown-pak")
     * Main: https://docs.github.com/en/actions
     * Intro: https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions
     * Syntax: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
-* CRAN
-  * Unified location to submit and share packages
-  * Requires a person to manually inspect / approve submitted packages
-    * This process is slow and tedious due to many back and forth requests.
+   * "I'd bet can do almost everything you can do in Jenkins, you can do in GitHub Actions" - Derrick
+     * See [example of executing all steps within a Docker container](https://github.com/r-lib/actions/blob/master/examples/docker.yaml).
 * `pak`
+  * A _new_ version [of `remotes`](https://github.com/r-lib/remotes)
   * > A fresh approach to package installation
   * Website: https://pak.r-lib.org/
   * GitHub: https://github.com/r-lib/pak
+
 # Story
 
 When submitting packages to CRAN, it helps to let them know where you've tested R packages and on which platforms.  The more platforms and R versions that you can test your package on, the better!
@@ -63,7 +73,10 @@ To feel comfortable submitting a heavily used R package, I like to test on using
   * devel
   * release
   * oldrelease
-  * 3.4 ([As there is no name called `reallyoldrelease`](https://github.com/r-lib/actions/issues/26#issuecomment-567524058))
+  * 3.4
+  * 3.3 ([As there is no name called `reallyoldrelease`](https://github.com/r-lib/actions/issues/26#issuecomment-567524058))
+
+> `tidyverse` supports the latest 4 versions of R
 
 These combinations create a large test matrix and is not fun to manually execute.
 
@@ -81,11 +94,20 @@ This repo uses `pak` to [install system requirements](https://github.com/schloer
 * wholistic installation (consistency): It knows everything that is going to be installed before installing the first package.
 * parallel installation (speed): If two packages are not dependent on each other, they may be install in parallel.
 
+#### Environments
+
+https://github.com/actions/virtual-environments
+
+* Ubuntu 18, 20
+* macOS 10.15, 11
+* Windows Server 2016, 2019
+
 
 # Real Life Example
 
 * `r-lib/actions`
   * Examples: https://github.com/r-lib/actions/tree/master/examples
+    * Run code within a Docker image: [examples/docker.yaml](https://github.com/r-lib/actions/blob/master/examples/docker.yaml)
 
 * `plumber` R package
   * `R CMD check`: [.github/workflows/R-CMD-check.yaml](https://github.com/rstudio/plumber/blob/master/.github/workflows/R-CMD-check.yaml)

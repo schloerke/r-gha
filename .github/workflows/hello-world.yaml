@@ -14,7 +14,7 @@ name: Echo
 
 
 jobs:
-  lint:
+  hello:
     # Which operation system does it run on?
     runs-on: macOS-latest
 

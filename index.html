@@ -68,10 +68,27 @@
 <blockquote>
 <p>This repo is not maintained after May 11, 2021 and may become out of date.</p>
 </blockquote>
+<div id="demo" class="section level2">
+<h2 class="hasAnchor">
+<a href="#demo" class="anchor"></a>Demo</h2>
+<ul>
+<li>
+<a href="https://github.com/schloerke/r-gha/blob/main/.github/workflows/hello-world.yaml">Hello world</a> - <code>echo 'hello world!'</code>
+</li>
+<li>
+<a href="https://github.com/schloerke/r-gha/blob/main/.github/workflows/hello-world-lintr.yaml">Code Linting hello world</a> - Minimal steps to call <code>lintr::lint_package()</code>
+</li>
+<li>
+<a href="https://github.com/schloerke/r-gha/blob/main/.github/workflows/hello-check.yaml">Bare bones - Check R package</a> - Minimal steps to execute <code>R CMD check .</code>
+</li>
+<li>
+<a href="https://github.com/schloerke/r-gha/blob/main/.github/workflows/check-pak.yaml">Regular - Check R package</a> - Full R cmd check using <code>pak</code>.</li>
+</ul>
+</div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
-<p>Assuming you have an R package in your repo…</p>
+<p>To add the workflow files to your repo, call:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Typical repos</span>
 <span class="co"># usethis::use_github_action_check_standard()</span>
@@ -79,6 +96,7 @@
 <span class="co"># This repo uses (and all future repos should use)</span>
 <span class="fu">usethis</span><span class="fu">::</span><span class="fu">use_github_action</span><span class="op">(</span><span class="st">"check-pak"</span><span class="op">)</span>
 <span class="fu">usethis</span><span class="fu">::</span><span class="fu">use_github_action</span><span class="op">(</span><span class="st">"pkgdown-pak"</span><span class="op">)</span></code></pre></div>
+<p>… then <code>git commit</code> and <code>git push</code> the changes in your local repo!</p>
 </div>
 </div>
 <div id="definitions" class="section level1">
@@ -101,14 +119,9 @@
 </li>
 </ul>
 </li>
-</ul>
-</li>
-<li>CRAN
+<li>“I’d bet can do almost everything you can do in Jenkins, you can do in GitHub Actions” - Derrick
 <ul>
-<li>Unified location to submit and share packages</li>
-<li>Requires a person to manually inspect / approve submitted packages
-<ul>
-<li>This process is slow and tedious due to many back and forth requests.</li>
+<li>See <a href="https://github.com/r-lib/actions/blob/master/examples/docker.yaml">example of executing all steps within a Docker container</a>.</li>
 </ul>
 </li>
 </ul>
@@ -116,17 +129,22 @@
 <li>
 <code>pak</code>
 <ul>
+<li>A <em>new</em> version <a href="https://github.com/r-lib/remotes">of <code>remotes</code></a>
+</li>
 <li><blockquote>
 <p>A fresh approach to package installation</p>
 </blockquote></li>
-<li><p>Website: <a href="https://pak.r-lib.org/" class="uri">https://pak.r-lib.org/</a></p></li>
-<li>
-<p>GitHub: <a href="https://github.com/r-lib/pak" class="uri">https://github.com/r-lib/pak</a></p>
-<h1 id="story">Story</h1>
+<li>Website: <a href="https://pak.r-lib.org/" class="uri">https://pak.r-lib.org/</a>
+</li>
+<li>GitHub: <a href="https://github.com/r-lib/pak" class="uri">https://github.com/r-lib/pak</a>
 </li>
 </ul>
 </li>
 </ul>
+</div>
+<div id="story" class="section level1">
+<h1 class="hasAnchor">
+<a href="#story" class="anchor"></a>Story</h1>
 <p>When submitting packages to CRAN, it helps to let them know where you’ve tested R packages and on which platforms. The more platforms and R versions that you can test your package on, the better!</p>
 <div id="history" class="section level4">
 <h4 class="hasAnchor">
@@ -154,10 +172,14 @@
 <li>devel</li>
 <li>release</li>
 <li>oldrelease</li>
-<li>3.4 (<a href="https://github.com/r-lib/actions/issues/26#issuecomment-567524058">As there is no name called <code>reallyoldrelease</code></a>)</li>
+<li>3.4</li>
+<li>3.3 (<a href="https://github.com/r-lib/actions/issues/26#issuecomment-567524058">As there is no name called <code>reallyoldrelease</code></a>)</li>
 </ul>
 </li>
 </ul>
+<blockquote>
+<p><code>tidyverse</code> supports the latest 4 versions of R</p>
+</blockquote>
 <p>These combinations create a large test matrix and is not fun to manually execute.</p>
 </div>
 <div id="solution" class="section level4">
@@ -180,6 +202,16 @@
 <li>parallel installation (speed): If two packages are not dependent on each other, they may be install in parallel.</li>
 </ul>
 </div>
+<div id="environments" class="section level4">
+<h4 class="hasAnchor">
+<a href="#environments" class="anchor"></a>Environments</h4>
+<p><a href="https://github.com/actions/virtual-environments" class="uri">https://github.com/actions/virtual-environments</a></p>
+<ul>
+<li>Ubuntu 18, 20</li>
+<li>macOS 10.15, 11</li>
+<li>Windows Server 2016, 2019</li>
+</ul>
+</div>
 </div>
 <div id="real-life-example" class="section level1">
 <h1 class="hasAnchor">
@@ -189,6 +221,10 @@
 <code>r-lib/actions</code>
 <ul>
 <li>Examples: <a href="https://github.com/r-lib/actions/tree/master/examples" class="uri">https://github.com/r-lib/actions/tree/master/examples</a>
+<ul>
+<li>Run code within a Docker image: <a href="https://github.com/r-lib/actions/blob/master/examples/docker.yaml">examples/docker.yaml</a>
+</li>
+</ul>
 </li>
 </ul>
 </li>

@@ -1,18 +1,17 @@
 Package: expkg
-Title: What the Package Does (One Line, Title Case)
+Title: R and GitHub Actions
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "First",
-           family = "Last",
+Authors@R:
+    person(given = "Barret",
+           family = "Schloerke",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "barret@rstudio.com")
+Description: Shows how to integrate R and GitHub Actions together to create a robust workflow.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Suggests: 
+Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

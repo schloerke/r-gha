@@ -30,7 +30,7 @@ jobs:
         shell: Rscript {0}
         run: |
           pak::local_install_dev_deps(upgrade = TRUE)
-          pak::pkg_install("rcmdcheck")
+          pak::pkg_install("lintr")
 
       - name: Install package
         run: R CMD INSTALL .

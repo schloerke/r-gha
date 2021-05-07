@@ -1,0 +1,28 @@
+# When should this workflow run?
+on:
+  # on "git push"
+  push:
+    branches:
+      - main
+  # within a PR that merges to `main` branch
+  pull_request:
+    branches:
+      - main
+
+# Give it the action a name
+name: Echo
+
+
+jobs:
+  lint:
+    # Which operation system does it run on?
+    runs-on: macOS-latest
+
+    # Define the execution steps...
+    steps:
+      # Step #1
+      # Print "hello world!" from within the bash shell
+      - name: Hello World!
+        shell: bash
+        run: |
+          echo "hello world!"
